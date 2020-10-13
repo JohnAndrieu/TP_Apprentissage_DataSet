@@ -1,15 +1,27 @@
 
-###### ###### KMeans x1 nombre clusters fixé ###### ######
+###### ###### KMeans y1 nombre clusters fixé ###### ######
 
-Temps d'execution Kmeans- y1 [15] = 2.258991
-Coefficient de Silhouette = 0.373716
-Coefficient de Davies = 0.828596
+Temps d'execution Kmeans- y1 [35] = 7.015553
+Coefficient de Silhouette = 0.363657
+Coefficient de Davies = 0.799942
 
 ###### ###### KMeans- y1 ###### ######
 
-Temps d'execution Kmeans- y1 [5] = 1.106270
-Coefficient de Silhouette = 0.394459
-Coefficient de Davies = 0.808977
-Temps d'execution Kmeans- y1 [6] = 1.092131
-Coefficient de Silhouette = 0.383856
-Coefficient de Davies = 0.830119
+Temps d'execution Kmeans- y1 [5] = 1.529622
+Coefficient de Silhouette = 0.394457
+Coefficient de Davies = 0.808983
+Temps d'execution Kmeans- y1 [6] = 1.798056
+Coefficient de Silhouette = 0.384032
+Coefficient de Davies = 0.830057
+Temps d'execution Kmeans- y1 [7] = 1.796863
+Coefficient de Silhouette = 0.372219
+Coefficient de Davies = 0.844188
+Temps d'execution Kmeans- y1 [8] = 1.939349
+Coefficient de Silhouette = 0.386732
+Coefficient de Davies = 0.791317
+Temps d'execution Kmeans- y1 [9] = 2.414986
+Coefficient de Silhouette = 0.381039
+Coefficient de Davies = 0.790554
+Temps d'execution Kmeans- y1 [10] = 2.203557
+Coefficient de Silhouette = 0.374529
+Coefficient de Davies = 0.808864

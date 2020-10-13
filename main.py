@@ -13,22 +13,22 @@ from sklearn.preprocessing import StandardScaler
 import re
 
 file_smile = "/Users/jonathan/SDBD/clustering-benchmark/src/main/resources/datasets/artificial/smile1.arff"
-x1 = "/Users/jonathan/SDBD/dataset/x1.txt"
-x2 = "/Users/jonathan/SDBD/dataset/x2.txt"
-x3 = "/Users/jonathan/SDBD/dataset/x3.txt"
-x4 = "/Users/jonathan/SDBD/dataset/x4.txt"
-y1 = "/Users/jonathan/SDBD/dataset/y1.txt"
+x1 = "/home/jandrieu/Bureau/dataset/x1.txt"
+x2 = "/home/jandrieu/Bureau/dataset/x2.txt"
+x3 = "/home/jandrieu/Bureau/dataset/x3.txt"
+x4 = "/home/jandrieu/Bureau/dataset/x4.txt"
+y1 = "/home/jandrieu/Bureau/dataset/y1.txt"
 
 
 def save_fig(x, y, labels, name):
     plt.figure()
-    plt.scatter(x, y, c=labels, marker='x')
+    plt.scatter(x, y, c=labels, marker='.', s=0.0005)
     plt.savefig(name)
 
 
 def save_fig_nolabels(x, y, name):
     plt.figure()
-    plt.scatter(x, y, marker='x')
+    plt.scatter(x, y, marker='.', s=0.0005)
     plt.savefig(name)
 
 
@@ -97,7 +97,7 @@ def iter_KMeansClustering(data, name):
 
 def runClustering_KMeans(data, name):
     data_train = extract_data(data)
-    nb_cluster = 15
+    nb_cluster = 35
     save_fig_nolabels(data_train[:, 0], data_train[:, 1], "./kmeans_graph/" + name)
     runAndSave_KMeans(nb_cluster, data_train, data_train[:, 0], data_train[:, 1], name, name + "_kmeans")
     iter_KMeansClustering(data_train, name)
@@ -105,6 +105,7 @@ def runClustering_KMeans(data, name):
 
 def Clustering_KMeans():
     erase_file("./execution_time/kmeans_clustering/kmeans_clustering.txt")
+    """
     insert_section("./execution_time/kmeans_clustering/kmeans_clustering.txt", "KMeans x1"
                    + " nombre clusters fixé")
 
@@ -125,7 +126,7 @@ def Clustering_KMeans():
                    + " nombre clusters fixé")
     print("x4")
     runClustering_KMeans(x4, "x4")
-
+    """
     insert_section("./execution_time/kmeans_clustering/kmeans_clustering.txt", "KMeans y1"
                    + " nombre clusters fixé")
 
@@ -355,14 +356,19 @@ def Clustering_HDBSCAN():
     runAndSave_HDBSCAN(data_train, "y1", data_train[:, 0], data_train[:, 1], "y1_hdbscan")
 
 
-def main():
-    # visualisation()
-    # Clustering_KMeans()
-    #Clustering_Agglomeratif()
-    Clustering_DBSCAN()
-    # dubug_DBSCAN()
-    # Clustering_HDBSCAN()
+def main(param):
+    if(param == "1"):
+        visualisation()
+    if (param == "2"):
+        Clustering_KMeans()
+    if (param == "3"):
+        Clustering_Agglomeratif()
+    if (param == "4"):
+        Clustering_DBSCAN()
+    if (param == "5"):
+        Clustering_HDBSCAN()
 
-
+"""
 if __name__ == "__main__":
     main()
+"""
