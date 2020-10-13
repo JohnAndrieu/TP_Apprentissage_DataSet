@@ -1,0 +1,6 @@
+numpy
+matplotlib
+sklearn
+hdbscan
+scipy
+scikit-learn
