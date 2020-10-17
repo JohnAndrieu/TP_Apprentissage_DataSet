@@ -13,25 +13,22 @@ from sklearn.preprocessing import StandardScaler
 import re
 
 file_smile = "/Users/jonathan/SDBD/clustering-benchmark/src/main/resources/datasets/artificial/smile1.arff"
-x1 = "/Users/jonathan/SDBD/dataset/x1.txt"
-x2 = "/Users/jonathan/SDBD/dataset/x2.txt"
-x3 = "/Users/jonathan/SDBD/dataset/x3.txt"
-x4 = "/Users/jonathan/SDBD/dataset/x4.txt"
-y1 = "/Users/jonathan/SDBD/dataset/y1.txt"
-
-iris = "/Users/jonathan/SDBD/clustering-benchmark/src/main/resources/datasets/real-world/iris.arff"
-balance_scale = "/Users/jonathan/SDBD/clustering-benchmark/src/main/resources/datasets/real-world/balance-scale.arff"
+x1 = "/home/jandrieu/Bureau/dataset/x1.txt"
+x2 = "/home/jandrieu/Bureau/dataset/x2.txt"
+x3 = "/home/jandrieu/Bureau/dataset/x3.txt"
+x4 = "/home/jandrieu/Bureau/dataset/x4.txt"
+y1 = "/home/jandrieu/Bureau/dataset/y1.txt"
 
 
 def save_fig(x, y, labels, name):
     plt.figure()
-    plt.scatter(x, y, c=labels, marker='x')
+    plt.scatter(x, y, c=labels, marker='.', s=0.0005)
     plt.savefig(name)
 
 
 def save_fig_nolabels(x, y, name):
     plt.figure()
-    plt.scatter(x, y, marker='x')
+    plt.scatter(x, y, marker='.', s=0.0005)
     plt.savefig(name)
 
 
@@ -55,7 +52,6 @@ def extract_data(filename):
 
 
 def visualisation():
-    """
     x1_train = extract_data(x1)
     x2_train = extract_data(x2)
     x3_train = extract_data(x3)
@@ -66,11 +62,6 @@ def visualisation():
     save_fig_nolabels(x3_train[:, 0], x3_train[:, 1], './raw_visualisation/x3')
     save_fig_nolabels(x4_train[:, 0], x4_train[:, 1], './raw_visualisation/x4')
     save_fig_nolabels(y1_train[:, 0], y1_train[:, 1], './raw_visualisation/y1')
-    """
-    data_iris = arff.loadarff(open(iris, 'r'))
-    iris_train = np.array(data_iris)[0]
-    plt.scatter(iris_train['sepallength'], iris_train['sepalwidth'], c=iris_train['class'], marker='.')
-    plt.show()
 
 
 def run_KMeans(nb_cluster, data, label):
@@ -106,7 +97,7 @@ def iter_KMeansClustering(data, name):
 
 def runClustering_KMeans(data, name):
     data_train = extract_data(data)
-    nb_cluster = 15
+    nb_cluster = 35
     save_fig_nolabels(data_train[:, 0], data_train[:, 1], "./kmeans_graph/" + name)
     runAndSave_KMeans(nb_cluster, data_train, data_train[:, 0], data_train[:, 1], name, name + "_kmeans")
     iter_KMeansClustering(data_train, name)
@@ -114,6 +105,7 @@ def runClustering_KMeans(data, name):
 
 def Clustering_KMeans():
     erase_file("./execution_time/kmeans_clustering/kmeans_clustering.txt")
+    """
     insert_section("./execution_time/kmeans_clustering/kmeans_clustering.txt", "KMeans x1"
                    + " nombre clusters fixé")
 
@@ -134,7 +126,7 @@ def Clustering_KMeans():
                    + " nombre clusters fixé")
     print("x4")
     runClustering_KMeans(x4, "x4")
-
+    """
     insert_section("./execution_time/kmeans_clustering/kmeans_clustering.txt", "KMeans y1"
                    + " nombre clusters fixé")
 
@@ -247,10 +239,10 @@ def runAndSave_DBSCAN(distance, min_pts, data, name, x, y, name_fig):
 
 def iter_DBSCANClustering(data, name, x, y):
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN Clustering [" + name + "]")
-    for distance in numpy.linspace(0.15, 0.18, 10):
+    for distance in numpy.linspace(0.1, 0.2, 20):
         print(distance)
-        for samples in range(25, 35):
-            #distance = round(distance, 3)
+        for samples in range(2, 10):
+            distance = round(distance, 1)
             runAndSave_DBSCAN(distance, samples, data, name, x, y, name + "_" + "dt[" + str(distance).replace('.', ',')
                               + "]_pts[" + str(samples) + "]")
 
@@ -262,26 +254,24 @@ def runClustering_DBSCAN(filename, distance, min_pts, name):
 
 def Clustering_DBSCAN():
     erase_file("./execution_time/dbscan_clustering/dbscan_clustering.txt")
-    """
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x1"
                    + " distance et nombre de points fixés")
-
     distance = 5
     min_pts = 0.5
     runClustering_DBSCAN(x1, distance, min_pts, "x1")
     data = extract_data(x1)
     iter_DBSCANClustering(data, "x1", data[:, 0], data[:, 1])
-    """
 
+    """
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x2"
                    + " distance et nombre de points fixés")
 
-    distance = 1.35
+    distance = 0.35
     min_pts = 14
     runClustering_DBSCAN(x2, distance, min_pts, "x2")
     data = extract_data(x2)
-    iter_DBSCANClustering(data, "x2", data[:, 0], data[:, 1])
-    """
+    iter_DBSCANClustering(data, "x1", data[:, 0], data[:, 1])
+
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x3"
                    + " distance et nombre de points fixés")
 
@@ -366,14 +356,19 @@ def Clustering_HDBSCAN():
     runAndSave_HDBSCAN(data_train, "y1", data_train[:, 0], data_train[:, 1], "y1_hdbscan")
 
 
-def main():
-    visualisation()
-    # Clustering_KMeans()
-    #Clustering_Agglomeratif()
-    #Clustering_DBSCAN()
-    # dubug_DBSCAN()
-    # Clustering_HDBSCAN()
+def main(param):
+    if(param == "1"):
+        visualisation()
+    if (param == "2"):
+        Clustering_KMeans()
+    if (param == "3"):
+        Clustering_Agglomeratif()
+    if (param == "4"):
+        Clustering_DBSCAN()
+    if (param == "5"):
+        Clustering_HDBSCAN()
 
-
+"""
 if __name__ == "__main__":
     main()
+"""
