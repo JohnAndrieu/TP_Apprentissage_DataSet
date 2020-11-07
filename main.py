@@ -11,24 +11,26 @@ from sklearn.metrics import davies_bouldin_score
 import time
 from sklearn.preprocessing import StandardScaler
 import re
+import sys
 
 file_smile = "/Users/jonathan/SDBD/clustering-benchmark/src/main/resources/datasets/artificial/smile1.arff"
-x1 = "/home/jandrieu/Bureau/dataset/x1.txt"
-x2 = "/home/jandrieu/Bureau/dataset/x2.txt"
-x3 = "/home/jandrieu/Bureau/dataset/x3.txt"
-x4 = "/home/jandrieu/Bureau/dataset/x4.txt"
-y1 = "/home/jandrieu/Bureau/dataset/y1.txt"
+x1 = "/Users/jonathan/Desktop/dataset/x1.txt"
+x2 = "/Users/jonathan/Desktop/dataset/x2.txt"
+x3 = "/Users/jonathan/Desktop/dataset/x3.txt"
+x4 = "/Users/jonathan/Desktop/dataset/x4.txt"
+y1 = "/Users/jonathan/Desktop/dataset/y1.txt"
+
 
 
 def save_fig(x, y, labels, name):
     plt.figure()
-    plt.scatter(x, y, c=labels, marker='.', s=0.0005)
+    plt.scatter(x, y, c=labels, marker='.', s=0.5)
     plt.savefig(name)
 
 
 def save_fig_nolabels(x, y, name):
     plt.figure()
-    plt.scatter(x, y, marker='.', s=0.0005)
+    plt.scatter(x, y, marker='.', s=0.5)
     plt.savefig(name)
 
 
@@ -300,10 +302,11 @@ def Clustering_DBSCAN():
     iter_DBSCANClustering(data, "y1", data[:, 0], data[:, 1])
     """
 
-def run_HDBSCANClustering(data_train, label):
+
+def run_HDBSCANClustering(data_train, label, min_cluster):
     tmps1 = time.time()
     data_train = StandardScaler().fit_transform(data_train)
-    hdb = hdbscan.HDBSCAN(min_cluster_size=7).fit(data_train)
+    hdb = hdbscan.HDBSCAN(min_cluster_size=min_cluster).fit(data_train)
     tmps2 = time.time() - tmps1
     labels = hdb.labels_
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
@@ -317,58 +320,67 @@ def run_HDBSCANClustering(data_train, label):
     return hdb
 
 
-def runAndSave_HDBSCAN(data, name, x, y, name_fig):
-    dbscan = run_HDBSCANClustering(data, "HDBSCAN - " + name)
-    save_fig(x, y, dbscan.labels_, "./hdbscan_graph/" + name_fig)
-    print("./hdbscan_graph/" + name_fig)
+def runAndSave_HDBSCAN(data, name, x, y, name_fig, min_nb_cluster):
+    dbscan = run_HDBSCANClustering(data, "HDBSCAN - " + name, min_nb_cluster)
+    save_fig(x, y, dbscan.labels_, "./hdbscan_graph/" + name_fig + "_" + str(min_nb_cluster))
+    print("./hdbscan_graph/" + name_fig + "_" + str(min_nb_cluster))
 
 
 def Clustering_HDBSCAN():
     erase_file("./execution_time/hdbscan_clustering/hdbscan_clustering.txt")
     insert_section("./execution_time/hdbscan_clustering/hdbscan_clustering.txt", "HDBSCAN x1"
-                   + " distance et nombre de points fixés")
+                   + " min cluster size fixés")
+
+    min_nb_cluster = 60
 
     data_train = extract_data(x1)
-    runAndSave_HDBSCAN(data_train, "x1", data_train[:, 0], data_train[:, 1], "x1_hdbscan")
+    runAndSave_HDBSCAN(data_train, "x1", data_train[:, 0], data_train[:, 1], "x1_hdbscan", min_nb_cluster)
 
     insert_section("./execution_time/hdbscan_clustering/hdbscan_clustering.txt", "HDBSCAN x2"
-                   + " distance et nombre de points fixés")
+                   + " min cluster size fixés")
 
     data_train = extract_data(x2)
-    runAndSave_HDBSCAN(data_train, "x2", data_train[:, 0], data_train[:, 1], "x2_hdbscan")
+    runAndSave_HDBSCAN(data_train, "x2", data_train[:, 0], data_train[:, 1], "x2_hdbscan", min_nb_cluster)
 
     insert_section("./execution_time/hdbscan_clustering/hdbscan_clustering.txt", "HDBSCAN x3"
-                   + " distance et nombre de points fixés")
+                   + " min cluster size fixés")
 
     data_train = extract_data(x3)
-    runAndSave_HDBSCAN(data_train, "x3", data_train[:, 0], data_train[:, 1], "x3_hdbscan")
+    runAndSave_HDBSCAN(data_train, "x3", data_train[:, 0], data_train[:, 1], "x3_hdbscan", min_nb_cluster)
 
     insert_section("./execution_time/hdbscan_clustering/hdbscan_clustering.txt", "HDBSCAN x4"
-                   + " distance et nombre de points fixés")
+                   + " min cluster size fixés")
 
     data_train = extract_data(x4)
-    runAndSave_HDBSCAN(data_train, "x4", data_train[:, 0], data_train[:, 1], "x4_hdbscan")
+    runAndSave_HDBSCAN(data_train, "x4", data_train[:, 0], data_train[:, 1], "x4_hdbscan", min_nb_cluster)
 
+    """
     insert_section("./execution_time/hdbscan_clustering/hdbscan_clustering.txt", "HDBSCAN y1"
-                   + " distance et nombre de points fixés")
+                   + " min cluster size fixés")
 
     data_train = extract_data(y1)
     runAndSave_HDBSCAN(data_train, "y1", data_train[:, 0], data_train[:, 1], "y1_hdbscan")
+    """
 
 
 def main(param):
     if(param == "1"):
+        print("Running visu ...")
         visualisation()
     if (param == "2"):
+        print("Running kmeans ...")
         Clustering_KMeans()
     if (param == "3"):
+        print("Running agglo ...")
         Clustering_Agglomeratif()
     if (param == "4"):
+        print("Running dbscan ...")
         Clustering_DBSCAN()
     if (param == "5"):
+        print("Running hdbscan ...")
         Clustering_HDBSCAN()
 
-"""
+
 if __name__ == "__main__":
-    main()
-"""
+    print("Voici l'argument : " + sys.argv[1])
+    main(sys.argv[1])

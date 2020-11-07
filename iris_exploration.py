@@ -101,7 +101,7 @@ def main():
     df, setosa, virginica, versicolor = preparation()
     #visualisation(setosa, virginica, versicolor)
     #kmeans(df)
-    agglomeratif(df)
+    #agglomeratif(df)
 
 
 if __name__ == "__main__":
