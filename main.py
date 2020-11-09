@@ -256,6 +256,7 @@ def runClustering_DBSCAN(filename, distance, min_pts, name):
 
 def Clustering_DBSCAN():
     erase_file("./execution_time/dbscan_clustering/dbscan_clustering.txt")
+    """
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x1"
                    + " distance et nombre de points fixés")
     distance = 5
@@ -263,7 +264,7 @@ def Clustering_DBSCAN():
     runClustering_DBSCAN(x1, distance, min_pts, "x1")
     data = extract_data(x1)
     iter_DBSCANClustering(data, "x1", data[:, 0], data[:, 1])
-
+    """
     """
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x2"
                    + " distance et nombre de points fixés")
@@ -282,25 +283,26 @@ def Clustering_DBSCAN():
     runClustering_DBSCAN(x3, distance, min_pts, "x3")
     data = extract_data(x3)
     iter_DBSCANClustering(data, "x3", data[:, 0], data[:, 1])
-
+    
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN x4"
                    + " distance et nombre de points fixés")
     
-    distance = 5
-    min_pts = 0.5
+    distance = 0.0891
+    min_pts = 20
     runClustering_DBSCAN(x4, distance, min_pts, "x4")
-    data = extract_data(x4)
-    iter_DBSCANClustering(data, "x4", data[:, 0], data[:, 1])
+    #data = extract_data(x4)
+    #iter_DBSCANClustering(data, "x4", data[:, 0], data[:, 1])
+    """
 
     insert_section("./execution_time/dbscan_clustering/dbscan_clustering.txt", "DBSCAN y1"
                    + " distance et nombre de points fixés")
 
-    distance = 5
-    min_pts = 0.5
-    runClustering_DBSCAN(y1, distance, min_pts, "y1")
+    #distance = 5
+    #min_pts = 0.5
+    #runClustering_DBSCAN(y1, distance, min_pts, "y1")
     data = extract_data(y1)
     iter_DBSCANClustering(data, "y1", data[:, 0], data[:, 1])
-    """
+
 
 
 def run_HDBSCANClustering(data_train, label, min_cluster):

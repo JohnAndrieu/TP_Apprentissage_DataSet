@@ -1,4 +1,6 @@
 import time
+
+import numpy
 from scipy.io import arff
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -55,8 +57,8 @@ def kmeans(df):
     f.write(msg_time)
     f.close()
 
-    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=kmeans_sepal.labels_, marker='.')
-    ax[1].scatter(df['petallength'], df['petalwidth'], c=kmeans_petal.labels_, marker='.')
+    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=kmeans_sepal.labels_, marker='.', s=200)
+    ax[1].scatter(df['petallength'], df['petalwidth'], c=kmeans_petal.labels_, marker='.', s=200)
     ax[0].set(title='Sepal comparasion ', ylabel='sepal-width', xlabel='sepal-length')
     ax[1].set(title='Petal Comparasion', ylabel='petal-width', xlabel='petal-length')
     plt.savefig('./iris/kmeans/iris_kmeans')
@@ -83,8 +85,8 @@ def run_agglomeratif(df, linkage):
     f.write(msg_time + _msg_time)
     f.close()
 
-    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=agglo_sepal.labels_, marker='.')
-    ax[1].scatter(df['petallength'], df['petalwidth'], c=agglo_petal.labels_, marker='.')
+    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=agglo_sepal.labels_, marker='.', s=200)
+    ax[1].scatter(df['petallength'], df['petalwidth'], c=agglo_petal.labels_, marker='.', s=200)
     ax[0].set(title='Sepal comparasion ', ylabel='sepal-width', xlabel='sepal-length')
     ax[1].set(title='Petal Comparasion', ylabel='petal-width', xlabel='petal-length')
     plt.savefig('./iris/agglo/iris_agglo_' + linkage)
@@ -97,11 +99,80 @@ def agglomeratif(df):
     run_agglomeratif(df, 'ward')
 
 
+def run_dbscan(df, min_samples, eps):
+    plt.figure()
+    fig, ax = plt.subplots(1, 2, figsize=(21, 10))
+
+    df_sepal = df[['sepallength', 'sepalwidth']]
+    df_petal = df[['petallength', 'petalwidth']]
+
+    tmps1 = time.time()
+    agglo_sepal = DBSCAN(eps=eps, min_samples=min_samples).fit(df_sepal)
+    tmps2 = time.time() - tmps1
+
+    _tmps1 = time.time()
+    agglo_petal = DBSCAN(eps=eps, min_samples=min_samples).fit(df_petal)
+    _tmps2 = time.time() - _tmps1
+
+    f = open("./iris/execution_time/dbscan_clustering.txt", "a")
+    msg_time = "Temps d'execution [sepal] = %f\n" % tmps2
+    _msg_time = "Temps d'execution [petal] = %f\n" % _tmps2
+    f.write(msg_time + _msg_time)
+    f.close()
+
+    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=agglo_sepal.labels_, marker='.', s=200)
+    ax[1].scatter(df['petallength'], df['petalwidth'], c=agglo_petal.labels_, marker='.', s=200)
+    ax[0].set(title='Sepal comparasion', ylabel='sepal-width', xlabel='sepal-length')
+    ax[1].set(title='Petal Comparasion', ylabel='petal-width', xlabel='petal-length')
+    plt.savefig('./iris/dbscan/iris_dbscan_' + str(eps).replace(".", ","))
+
+
+def dbscan(df):
+    min_samples = 7
+    for eps in numpy.linspace(0.2, 0.3, 20):
+        run_dbscan(df, min_samples, eps)
+
+
+def run_hdbscan(df, min_cluster_size):
+    plt.figure()
+    fig, ax = plt.subplots(1, 2, figsize=(21, 10))
+
+    df_sepal = df[['sepallength', 'sepalwidth']]
+    df_petal = df[['petallength', 'petalwidth']]
+
+    tmps1 = time.time()
+    hdbscan_sepal = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size).fit(df_sepal)
+    tmps2 = time.time() - tmps1
+
+    _tmps1 = time.time()
+    hdbscan_petal = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size).fit(df_petal)
+    _tmps2 = time.time() - _tmps1
+
+    f = open("./iris/execution_time/hdbscan_clustering.txt", "a")
+    msg_time = "Temps d'execution [sepal] = %f\n" % tmps2
+    _msg_time = "Temps d'execution [petal] = %f\n" % _tmps2
+    f.write(msg_time + _msg_time)
+    f.close()
+
+    ax[0].scatter(df['sepallength'], df['sepalwidth'], c=hdbscan_sepal.labels_, marker='.', s=200)
+    ax[1].scatter(df['petallength'], df['petalwidth'], c=hdbscan_petal.labels_, marker='.', s=200)
+    ax[0].set(title='Sepal comparasion', ylabel='sepal-width', xlabel='sepal-length')
+    ax[1].set(title='Petal Comparasion', ylabel='petal-width', xlabel='petal-length')
+    plt.savefig('./iris/hdbscan/iris_hdbscan_' + str(min_cluster_size))
+
+
+def _hdbscan(df):
+    for min_cluster_size in range(2, 11):
+        run_hdbscan(df, min_cluster_size)
+
+
 def main():
     df, setosa, virginica, versicolor = preparation()
-    #visualisation(setosa, virginica, versicolor)
-    #kmeans(df)
-    #agglomeratif(df)
+    # visualisation(setosa, virginica, versicolor)
+    kmeans(df)
+    agglomeratif(df)
+    dbscan(df)
+    _hdbscan(df)
 
 
 if __name__ == "__main__":
